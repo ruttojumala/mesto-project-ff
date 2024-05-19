@@ -34,3 +34,34 @@ initialCards.forEach(function(item) {
   const newCard = createCard(item.name, item.link, deleteCard);
   conteinerCards.append(newCard);
 });
+
+// Открытие и закрытие модального окна
+const buttonEdit = document.querySelector('.profile__edit-button');
+const buttonAdd = document.querySelector('.profile__add-button');
+const profileImage = document.querySelector('.profile__image');
+const popupEdit = document.querySelector('.popup_type_edit');
+const popupContent = document.querySelector('.popup__content');
+function openPopupEdit() {
+  popupEdit.classList.add('popup_is-opened');
+  window.addEventListener('keydown', handleDownKey);
+};
+
+buttonEdit.addEventListener('click', openPopupEdit);
+buttonAdd.addEventListener('click', openPopupEdit);
+profileImage.addEventListener('click', openPopupEdit);
+
+const buttonClose = document.querySelector('.popup__close');
+function closePopupEdit() {
+  popupEdit.classList.remove('popup_is-opened');
+  window.removeEventListener('keydown', handleDownKey);
+};
+buttonClose.addEventListener('click', closePopupEdit);
+popupEdit.addEventListener('click', closePopupEdit);
+popupContent.addEventListener('click', (evt) =>  {
+  evt.stopPropagation();
+});
+function handleDownKey(evt) {
+  if (evt.key === 'Escape'){
+    closePopupEdit()
+  }
+};
