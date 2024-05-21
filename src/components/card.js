@@ -1,11 +1,14 @@
+ import { openPopup } from "./modal";
+ 
  // Темплейт карточки
  const cardTemplate = document.querySelector('#card-template').content;
+ 
 
 // Функция создания карточки
-function createCard(name, img, deleteCard, openPopup, likeCardButton) {
+function createCard(name, img, deleteCard, handleImageClick, likeCardButton) {
   const cardTemplateClone = cardTemplate.cloneNode(true);
- const cardImg = cardTemplateClone.querySelector('.card__image');
- const cardTitle = cardTemplateClone.querySelector('.card__title');
+  const cardImg = cardTemplateClone.querySelector('.card__image');
+  const cardTitle = cardTemplateClone.querySelector('.card__title');
   
   // Присваивание значений карточке
   cardTitle.textContent = name;
@@ -21,8 +24,7 @@ function createCard(name, img, deleteCard, openPopup, likeCardButton) {
   buttonCardLike.addEventListener('click', () => { likeCardButton(buttonCardLike)} );
 
   // Обработчик события открытия попапа карточки по клику на картинку
-  const popupTypeImage = document.querySelector('.popup_type_image');
-  cardImg.addEventListener('click', () => { openPopup(popupTypeImage, img, name) });
+  cardImg.addEventListener('click', handleImageClick);
 
   return cardTemplateClone;
 };
@@ -33,13 +35,9 @@ function deleteCard(evt){
 };
 
 // Функция лайк карточки 
- function likeCardButton (buttonCardLike) {
-  if(buttonCardLike.classList.contains('card__like-button_is-active')){
-    buttonCardLike.classList.remove('card__like-button_is-active');
-  } else { 
-    buttonCardLike.classList.add('card__like-button_is-active');
-  };
-};
+ function likeCardButton(buttonCardLike) {
+  buttonCardLike.classList.toggle("card__like-button_is-active");
+} 
 
 // Экспорт создания, удаления, лайка карточки
 export {createCard, deleteCard, likeCardButton};
