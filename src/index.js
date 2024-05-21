@@ -10,8 +10,8 @@ const buttonAdd = document.querySelector('.profile__add-button');
 const popups = document.querySelectorAll('.popup');
 const popupEdit = document.querySelector('.popup_type_edit');
 const popupNewCard = document.querySelector('.popup_type_new-card');
-const popupContent = document.querySelectorAll('.popup__content');
-const buttonClose = document.querySelectorAll('.popup__close');
+const contentPopups = document.querySelectorAll('.popup__content');
+const closeButtons = document.querySelectorAll('.popup__close');
 const formNewCard = popupNewCard.querySelector('.popup__form');
 const newCardNameInput = formNewCard.querySelector('.popup__input_type_card-name');
 const newCardUrlInput = formNewCard.querySelector('.popup__input_type_url');
@@ -36,7 +36,7 @@ formEdit.addEventListener('submit', handleFormEditSubmit);
 formNewCard.addEventListener('submit', handleFormNewCardSubmit);
 
 // Обработчик события закрытия попапа по кнопке
-buttonClose.forEach(function callback (item) {
+closeButtons.forEach(function callback (item) {
   item.addEventListener('click', () => { closePopup(item.closest('.popup')) });
 });
 
@@ -46,7 +46,7 @@ popups.forEach(function callback (item) {
 });
 
 // Отмена всплытия закрытия по попапу
-popupContent.forEach(function callback (item) {
+contentPopups.forEach(function callback (item) {
   item.addEventListener('click', (evt) =>  {
     evt.stopPropagation();
   });

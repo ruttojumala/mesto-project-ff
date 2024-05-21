@@ -1,11 +1,11 @@
+ // Темплейт карточки
+ const cardTemplate = document.querySelector('#card-template').content;
+
 // Функция создания карточки
 function createCard(name, img, deleteCard, openPopup, likeCardButton) {
-
-  // Темплейт карточки
-  const cardTemplate = document.querySelector('#card-template').content;
   const cardTemplateClone = cardTemplate.cloneNode(true);
-  const cardImg = cardTemplateClone.querySelector('.card__image');
-  const cardTitle = cardTemplateClone.querySelector('.card__title');
+ const cardImg = cardTemplateClone.querySelector('.card__image');
+ const cardTitle = cardTemplateClone.querySelector('.card__title');
   
   // Присваивание значений карточке
   cardTitle.textContent = name;
