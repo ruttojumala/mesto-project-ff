@@ -4,18 +4,18 @@ let popupOpened = null;
 function openPopup(popup) {
   popup.classList.add('popup_is-opened');
   popupOpened = popup;
-  window.addEventListener('keydown', handleDownKey);
+  window.addEventListener('keydown', handleEscape);
 };
 
 // Закрытие попапа
 function closePopup(popup) {
   popup.classList.remove('popup_is-opened');
   popupOpened = null;
-  window.removeEventListener('keydown', handleDownKey);
+  window.removeEventListener('keydown', handleEscape);
 };
     
 // Закрытие попапа на кнопку "Escape"
-function handleDownKey(evt) {
+function handleEscape(evt) {
   if (evt.key === 'Escape'){
     closePopup(popupOpened);
   }

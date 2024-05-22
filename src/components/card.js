@@ -1,6 +1,4 @@
- import { openPopup } from "./modal";
- 
- // Темплейт карточки
+  // Темплейт карточки
  const cardTemplate = document.querySelector('#card-template').content;
  
 
@@ -35,9 +33,9 @@ function deleteCard(evt){
 };
 
 // Функция лайк карточки 
- function likeCardButton(buttonCardLike) {
+ function likeCard(buttonCardLike) {
   buttonCardLike.classList.toggle("card__like-button_is-active");
 } 
 
 // Экспорт создания, удаления, лайка карточки
-export {createCard, deleteCard, likeCardButton};
+export {createCard, deleteCard, likeCard as likeCardButton};

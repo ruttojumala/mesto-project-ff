@@ -4,28 +4,30 @@ import { createCard, deleteCard, likeCardButton } from './components/card.js';
 import { openPopup, closePopup} from './components/modal.js';
 
 // DOM узлы
-const conteinerCards = document.querySelector('.places__list');
+const cardsContainer = document.querySelector('.places__list');
 const profileEditButton = document.querySelector('.profile__edit-button');
 const newCardButton = document.querySelector('.profile__add-button');
 const popups = document.querySelectorAll('.popup');
 const profileEditPopup = document.querySelector('.popup_type_edit');
 const newCardPopup = document.querySelector('.popup_type_new-card');
 const imagePopup = document.querySelector('.popup_type_image');
-const allPopupsContent = document.querySelectorAll('.popup__content');
+const allPopupsContexts = document.querySelectorAll('.popup__content');
 const popupCloseButtons = document.querySelectorAll('.popup__close');
-const newCardForm = newCardPopup.querySelector('.popup__form');
+const newCardForm = document.forms["new-place"];
 const newCardNameInput = newCardForm.querySelector('.popup__input_type_card-name');
 const newCardUrlInput = newCardForm.querySelector('.popup__input_type_url');
 const profileTitleName = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 const popupNameInput = document.querySelector('.popup__input_type_name');
 const popupDescriptionInput = document.querySelector('.popup__input_type_description');
-const profileEditForm = profileEditPopup.querySelector('.popup__form');
+const profileEditForm = document.forms["edit-profile"];
+const imgPopup = imagePopup.querySelector('.popup__image');
+const captionPopup = imagePopup.querySelector('.popup__caption');
 
 // Выводим карточки на страницу
 initialCards.forEach(function(item) {
   const newCard = createCard(item.name, item.link, deleteCard, handleImageClick, likeCardButton);
-  conteinerCards.append(newCard);
+  cardsContainer.append(newCard);
 });
 
 // Обработчики события открытия попапов 
@@ -50,7 +52,7 @@ popups.forEach(function callback (item) {
 });
 
 // Отмена всплытия закрытия по попапу
-allPopupsContent.forEach(function callback (item) {
+allPopupsContexts.forEach(function callback (item) {
   item.addEventListener('click', (evt) =>  {
     evt.stopPropagation();
   });
@@ -61,17 +63,17 @@ function handleFormEditSubmit(evt) {
   evt.preventDefault();
   profileTitleName.textContent = popupNameInput.value;
   profileDescription.textContent = popupDescriptionInput.value;
-  closePopup(evt.target.closest('.popup'));
+  closePopup(profileEditPopup);
 }
 
 // Функция отправки формы создания новой карты
 function handleFormNewCardSubmit (evt) {
   evt.preventDefault();
   const newCard = createCard(newCardNameInput.value, newCardUrlInput.value, deleteCard, handleImageClick, likeCardButton);
-  conteinerCards.prepend(newCard);
-  closePopup(evt.target.closest('.popup'));
+  cardsContainer.prepend(newCard);
+  closePopup(newCardPopup);
   newCardNameInput.value = '';
-  newCardUrlInput.value = '';
+  newCardUrlInput.value = ''; // Пыталась здесь использовать решение, которое советовали с evt.target.reset(), но здесь возвращается undefined 
 };
 
 // Автозаполнение инпутов для попапа редактирования
@@ -82,8 +84,6 @@ function fillProfileInputs() {
 
 // Функция открытия попапа карточки по клику на картинку
 function handleImageClick(evt) {
-  const imgPopup = imagePopup.querySelector('.popup__image');
-  const captionPopup = imagePopup.querySelector('.popup__caption');
   imgPopup.src = evt.target.src;
   imgPopup.alt = evt.target.alt;
   captionPopup.textContent = evt.target.alt;
