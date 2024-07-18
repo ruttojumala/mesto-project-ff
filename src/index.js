@@ -1,7 +1,9 @@
 import './pages/index.css';
 import { initialCards } from './cards.js';
 import { createCard, deleteCard, likeCardButton } from './components/card.js';
-import { openPopup, closePopup} from './components/modal.js';
+import { openPopup, closePopup } from './components/modal.js';
+import { enableValidation, clearValidation } from './validation.js';
+import { getInitialCards, getInitalUsers, prom } from './api.js';
 
 // DOM узлы
 const cardsContainer = document.querySelector('.places__list');
@@ -23,6 +25,17 @@ const popupDescriptionInput = document.querySelector('.popup__input_type_descrip
 const profileEditForm = document.forms["edit-profile"];
 const imgPopup = imagePopup.querySelector('.popup__image');
 const captionPopup = imagePopup.querySelector('.popup__caption');
+const profileImage = document.querySelector('.profile__image');
+
+// валидация
+enableValidation({
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+}); 
 
 // Выводим карточки на страницу
 initialCards.forEach(function(item) {
@@ -34,8 +47,20 @@ initialCards.forEach(function(item) {
 profileEditButton.addEventListener('click', () => { 
   openPopup(profileEditPopup);
   fillProfileInputs();
+  clearValidation(profileEditPopup, {
+    inputClass: ".popup__input",
+    runToggleButton: true,
+    runIsValid: true
+  })
 });
-newCardButton.addEventListener('click', () => { openPopup(newCardPopup) });
+newCardButton.addEventListener('click', () => { 
+  openPopup(newCardPopup);
+  clearValidation(newCardPopup, {
+    inputClass: ".popup__input",
+    runToggleButton: true,
+    runIsValid: false
+  })
+});
 
 // Обработчики события отправки сабмитов
 profileEditForm.addEventListener('submit', handleFormEditSubmit);
@@ -73,7 +98,7 @@ function handleFormNewCardSubmit (evt) {
   cardsContainer.prepend(newCard);
   closePopup(newCardPopup);
   newCardNameInput.value = '';
-  newCardUrlInput.value = ''; // Пыталась здесь использовать решение, которое советовали с evt.target.reset(), но здесь возвращается undefined 
+  newCardUrlInput.value = '';
 };
 
 // Автозаполнение инпутов для попапа редактирования
@@ -89,3 +114,18 @@ function handleImageClick(evt) {
   captionPopup.textContent = evt.target.alt;
   openPopup(imagePopup, evt.target.src, evt.target.alt)
 };
+
+/*getInitialCards();
+getInitalUsers()
+.then((result) => {
+  profileTitleName.textContent = result.name;
+  profileDescription.textContent = result.about;
+  profileImage.src = result.avatar;
+});*/
+
+Promise.all([getInitalUsers(), getInitialCards()])
+.then((result) => {
+  profileTitleName.textContent = result[0].name;
+  profileDescription.textContent = result[0].about;
+  profileImage.src = result[0].avatar;
+})
