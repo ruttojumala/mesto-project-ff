@@ -9,6 +9,34 @@
   margin: 0 29px 0 0;
 }
 
+.profile__image-overlay {
+  position: absolute;
+  width: 122px;
+  height: 122px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  background-color:rgba(0, 0, 0, 0.0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+}
+
+.profile__image-pencil {
+  position: absolute;
+  display: none;
+  /*pointer-events: none;*/
+}
+
+.profile__image-overlay:hover {
+  background-color:rgba(0, 0, 0, 0.8);
+}
+
+.profile__image-overlay:hover .profile__image-pencil {
+  display: block;
+}
+
 @media screen and (max-width: 740px) {
   .profile__image {
     margin: 0 10px 0 0;
