@@ -3,7 +3,7 @@ import './pages/index.css';
 import { createCard, deleteCard, likeCardButton } from './components/card.js';
 import { openPopup, closePopup } from './components/modal.js';
 import { enableValidation, clearValidation } from './validation.js';
-import { getInitialCards, getInitalUsers, sendChangedUsers, addNewCards, editAvatar } from './api.js';
+import { getInitialCardsRequest, getInitalUsersRequest, sendChangedUsersRequest, addNewCardsRequest, editAvatarRequest } from './api.js';
 
 // DOM узлы
 const cardsContainer = document.querySelector('.places__list');
@@ -42,7 +42,7 @@ enableValidation({
   inactiveButtonClass: 'popup__button_disabled',
   inputErrorClass: 'popup__input_type_error',
   errorClass: 'popup__error_visible'
-}); 
+});
 
 /* Выводим карточки на страницу
 initialCards.forEach(function(item) {
@@ -86,18 +86,18 @@ newCardForm.addEventListener('submit', handleFormNewCardSubmit);
 avatarEditForm.addEventListener('submit', handleFormEditAvatarSubmit);
 
 // Обработчик события закрытия попапа по кнопке
-popupCloseButtons.forEach(function callback (item) {
+popupCloseButtons.forEach(function callback(item) {
   item.addEventListener('click', () => { closePopup(item.closest('.popup')) });
 });
 
 // Обработчик события закрытия попапа по оверлею
-popups.forEach(function callback (item) {
-  item.addEventListener('click', () => {  closePopup(item) });
+popups.forEach(function callback(item) {
+  item.addEventListener('click', () => { closePopup(item) });
 });
 
 // Отмена всплытия закрытия по попапу
-allPopupsContexts.forEach(function callback (item) {
-  item.addEventListener('click', (evt) =>  {
+allPopupsContexts.forEach(function callback(item) {
+  item.addEventListener('click', (evt) => {
     evt.stopPropagation();
   });
 });
@@ -106,53 +106,53 @@ allPopupsContexts.forEach(function callback (item) {
 function handleFormEditSubmit(evt) {
   evt.preventDefault();
   profileSaveButton.textContent = 'Сохранение...'
-  sendChangedUsers(popupNameInput.value, popupDescriptionInput.value)
-  .then(() => {
-    profileTitleName.textContent = popupNameInput.value;
-    profileDescription.textContent = popupDescriptionInput.value;
-    closePopup(profileEditPopup);
-  })
-  .catch((err) => {
-    console.log(err);
-  }); 
+  sendChangedUsersRequest(popupNameInput.value, popupDescriptionInput.value)
+    .then(() => {
+      profileTitleName.textContent = popupNameInput.value;
+      profileDescription.textContent = popupDescriptionInput.value;
+      closePopup(profileEditPopup);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
 // Функция отправки формы создания новой карты
-function handleFormNewCardSubmit (evt) {
+function handleFormNewCardSubmit(evt) {
   evt.preventDefault();
   const newCard = createCard(newCardNameInput.value, newCardUrlInput.value, [], deleteCard, handleImageClick, likeCardButton, true, null, false);
   newCardSaveButton.textContent = 'Сохранение...'
-  addNewCards(newCardNameInput.value, newCardUrlInput.value)
-  .then(() =>{
-    cardsContainer.prepend(newCard);
-    closePopup(newCardPopup);
-    newCardNameInput.value = '';
-    newCardUrlInput.value = '';
-  })
-  .catch((err) => {
-    console.log(err);
-  }); 
+  addNewCardsRequest(newCardNameInput.value, newCardUrlInput.value)
+    .then(() => {
+      cardsContainer.prepend(newCard);
+      closePopup(newCardPopup);
+      newCardNameInput.value = '';
+      newCardUrlInput.value = '';
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 // Функция отправки формы обновленного аватара
-function handleFormEditAvatarSubmit (evt) {
+function handleFormEditAvatarSubmit(evt) {
   evt.preventDefault();
   profileImage.src = avatarPopupInput.value;
   avatarSaveButton.textContent = 'Сохранение...'
-  editAvatar(profileImage.src)
-  .then(() => {
-    closePopup(avatarPopup);
-    avatarPopupInput.value = '';
-  })
-  .catch((err) => {
-    console.log(err);
-  }); 
+  editAvatarRequest(profileImage.src)
+    .then(() => {
+      closePopup(avatarPopup);
+      avatarPopupInput.value = '';
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
 // Автозаполнение инпутов для попапа редактирования
 function fillProfileInputs() {
   popupNameInput.value = profileTitleName.textContent;
-  popupDescriptionInput.value =  profileDescription.textContent; 
+  popupDescriptionInput.value = profileDescription.textContent;
 };
 
 // Функция открытия попапа карточки по клику на картинку
@@ -164,20 +164,18 @@ function handleImageClick(evt) {
 };
 
 
-Promise.all([getInitalUsers(), getInitialCards()])
-.then((result) => {
-  profileTitleName.textContent = result[0].name;
-  profileDescription.textContent = result[0].about;
-  profileImage.src = result[0].avatar;
-  result[1].forEach(function(item) {
-    const isOwner = item.owner._id === result[0]._id ? true : false;
-    const isLiked = item.likes.find((element) => element._id === result[0]._id);
-    const newCard = createCard(item.name, item.link, item.likes, deleteCard, handleImageClick, likeCardButton, isOwner, item._id, isLiked);
-    cardsContainer.append(newCard);
-    //console.log(item);
-  });
-  //console.log(result[1])
-})
-.catch((err) => {
-  console.log(err);
-}); 
+Promise.all([getInitalUsersRequest(), getInitialCardsRequest()])
+  .then((result) => {
+    profileTitleName.textContent = result[0].name;
+    profileDescription.textContent = result[0].about;
+    profileImage.src = result[0].avatar;
+    result[1].forEach(function (item) {
+      const isOwner = item.owner._id === result[0]._id ? true : false;
+      const isLiked = item.likes.find((element) => element._id === result[0]._id);
+      const newCard = createCard(item.name, item.link, item.likes, deleteCard, handleImageClick, likeCardButton, isOwner, item._id, isLiked);
+      cardsContainer.append(newCard);
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  }); 

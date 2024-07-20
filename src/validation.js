@@ -19,7 +19,7 @@ const isValid = (formElement, inputElement) => {
   } else {
     inputElement.setCustomValidity("");
   }
-  if(!inputElement.validity.valid) {
+  if (!inputElement.validity.valid) {
     showInputError(formElement, inputElement, inputElement.validationMessage);
   } else {
     hideInputError(formElement, inputElement);
@@ -33,7 +33,7 @@ const hasInvalidInput = (inputList) => {
 };
 
 const toggleButtonState = (inputList, buttonElement) => {
-  if (hasInvalidInput(inputList)){
+  if (hasInvalidInput(inputList)) {
     buttonElement.disabled = true;
     buttonElement.classList.add('popup__button_disabled');
   } else {
@@ -72,8 +72,8 @@ const enableValidation = () => {
     formElement.addEventListener('submit', (evt) => {
       evt.preventDefault();
     });
-      setEventListeners(formElement);
+    setEventListeners(formElement);
   });
 };
 
-export {enableValidation, clearValidation};
+export { enableValidation, clearValidation };
