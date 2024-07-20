@@ -1,1 +1,1 @@
-https://github.com/ruttojumala/mesto-project-ff.git
+https://ruttojumala.github.io/mesto-project-ff/
