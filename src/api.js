@@ -1,6 +1,11 @@
 const baseUrl = 'https://nomoreparties.co/v1/wff-cohort-18';
 const authorizationKey = 'd14c7ee8-cf05-401c-830b-ff888d4e1b25';
-
+const handleResponse = (res) => {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Ошибка: ${res.status}`);
+}
 export const getInitalUsersRequest = () => {
   return fetch( baseUrl + '/users/me', {
     method: 'GET',
@@ -8,12 +13,7 @@ export const getInitalUsersRequest = () => {
       authorization: authorizationKey
     }
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then(res => handleResponse (res));
 }
 
 export const getInitialCardsRequest = () => {
@@ -22,12 +22,7 @@ export const getInitialCardsRequest = () => {
       authorization: authorizationKey
     }
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then(res => handleResponse (res));
 }
 
 export const sendChangedUsersRequest = (name, about) => {
@@ -42,12 +37,7 @@ export const sendChangedUsersRequest = (name, about) => {
       about: about
     })
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then(res => handleResponse (res));
 }
 
 export const addNewCardsRequest = (name, link) => {
@@ -62,12 +52,7 @@ export const addNewCardsRequest = (name, link) => {
       link: link
     })
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then(res => handleResponse (res));
 }
 
 export const deleteCardRequest = (cardId) => {
@@ -78,12 +63,7 @@ export const deleteCardRequest = (cardId) => {
       'Content-Type': 'application/json'
     }
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then(res => handleResponse (res));
 }
 
 export const setLikeCardRequest = (cardId) => {
@@ -94,12 +74,7 @@ export const setLikeCardRequest = (cardId) => {
       'Content-Type': 'application/json'
     }
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then(res => handleResponse (res));
 }
 
 export const removeLikeCardRequest = (cardId) => {
@@ -110,16 +85,11 @@ export const removeLikeCardRequest = (cardId) => {
       'Content-Type': 'application/json'
     }
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then(res => handleResponse (res));
 }
 
 export const editAvatarRequest = (urlAvatar) => {
-  return fetch( baseUrl + 'users/me/avatar', {
+  return fetch( baseUrl + '/users/me/avatar', {
     method: 'PATCH',
     headers: {
       authorization: authorizationKey,
@@ -129,10 +99,5 @@ export const editAvatarRequest = (urlAvatar) => {
       avatar: urlAvatar,
     })
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then(res => handleResponse (res));
 } 

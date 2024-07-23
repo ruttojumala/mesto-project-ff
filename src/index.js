@@ -34,15 +34,17 @@ const avatarSaveButton = avatarEditForm.querySelector('.button');
 const profileSaveButton = profileEditForm.querySelector('.button');
 const newCardSaveButton = newCardForm.querySelector('.button');
 
-// валидация
-enableValidation({
+const validationConfig = {
   formSelector: '.popup__form',
   inputSelector: '.popup__input',
   submitButtonSelector: '.popup__button',
   inactiveButtonClass: 'popup__button_disabled',
   inputErrorClass: 'popup__input_type_error',
   errorClass: 'popup__error_visible'
-});
+}
+
+// валидация
+enableValidation(validationConfig);
 
 /* Выводим карточки на страницу
 initialCards.forEach(function(item) {
@@ -52,32 +54,21 @@ initialCards.forEach(function(item) {
 
 // Обработчики события открытия попапов 
 profileEditButton.addEventListener('click', () => {
-  profileSaveButton.textContent = 'Сохранить'
-  openPopup(profileEditPopup);
   fillProfileInputs();
-  clearValidation(profileEditPopup, {
-    inputClass: ".popup__input",
-    runToggleButton: true,
-    runIsValid: true
-  })
+  openPopup(profileEditPopup);
+  clearValidation(profileEditPopup, validationConfig)
 });
+
 newCardButton.addEventListener('click', () => {
-  newCardSaveButton.textContent = 'Создать'
+  clearValidation(newCardPopup, validationConfig)
+  newCardPopup.reset;
   openPopup(newCardPopup);
-  clearValidation(newCardPopup, {
-    inputClass: ".popup__input",
-    runToggleButton: true,
-    runIsValid: false
-  })
 });
+
 avatarButton.addEventListener('click', () => {
-  avatarSaveButton.textContent = 'Сохранить'
+  clearValidation(avatarPopup, validationConfig)
+  avatarPopup.reset;
   openPopup(avatarPopup);
-  clearValidation(avatarPopup, {
-    inputClass: ".popup__input",
-    runToggleButton: true,
-    runIsValid: false
-  })
 });
 
 // Обработчики события отправки сабмитов
@@ -107,46 +98,54 @@ function handleFormEditSubmit(evt) {
   evt.preventDefault();
   profileSaveButton.textContent = 'Сохранение...'
   sendChangedUsersRequest(popupNameInput.value, popupDescriptionInput.value)
-    .then(() => {
-      profileTitleName.textContent = popupNameInput.value;
-      profileDescription.textContent = popupDescriptionInput.value;
+    .then((res) => {
+      profileTitleName.textContent = res.name;
+      profileDescription.textContent = res.about;
       closePopup(profileEditPopup);
     })
     .catch((err) => {
       console.log(err);
-    });
+    })
+    .finally(() => {
+      newCardSaveButton.textContent = 'Сохранить'
+    })
 }
 
 // Функция отправки формы создания новой карты
 function handleFormNewCardSubmit(evt) {
   evt.preventDefault();
-  const newCard = createCard(newCardNameInput.value, newCardUrlInput.value, [], deleteCard, handleImageClick, likeCardButton, true, null, false);
   newCardSaveButton.textContent = 'Сохранение...'
   addNewCardsRequest(newCardNameInput.value, newCardUrlInput.value)
-    .then(() => {
+  .then((res) => {
+      const newCard = createCard(res, deleteCard, handleImageClick, likeCardButton, res.owner._id);
       cardsContainer.prepend(newCard);
       closePopup(newCardPopup);
-      newCardNameInput.value = '';
-      newCardUrlInput.value = '';
+      newCardPopup.reset;
     })
     .catch((err) => {
       console.log(err);
-    });
+    })
+    .finally(() => {
+      newCardSaveButton.textContent = 'Создать'
+    })
 };
 
 // Функция отправки формы обновленного аватара
 function handleFormEditAvatarSubmit(evt) {
   evt.preventDefault();
-  profileImage.src = avatarPopupInput.value;
   avatarSaveButton.textContent = 'Сохранение...'
-  editAvatarRequest(profileImage.src)
-    .then(() => {
+  editAvatarRequest(avatarPopupInput.value)
+  .then((res) => {
+      profileImage.src = res.avatar;
       closePopup(avatarPopup);
       avatarPopupInput.value = '';
     })
     .catch((err) => {
       console.log(err);
-    });
+    })
+    .finally(() => {
+      newCardSaveButton.textContent = 'Сохранить'
+    })
 }
 
 // Автозаполнение инпутов для попапа редактирования
@@ -169,10 +168,11 @@ Promise.all([getInitalUsersRequest(), getInitialCardsRequest()])
     profileTitleName.textContent = result[0].name;
     profileDescription.textContent = result[0].about;
     profileImage.src = result[0].avatar;
-    result[1].forEach(function (item) {
-      const isOwner = item.owner._id === result[0]._id ? true : false;
-      const isLiked = item.likes.find((element) => element._id === result[0]._id);
-      const newCard = createCard(item.name, item.link, item.likes, deleteCard, handleImageClick, likeCardButton, isOwner, item._id, isLiked);
+    result[1].forEach(function (card) {
+      //const isOwner = card.owner._id === result[0]._id ? true : false;
+      //const isLiked = card.likes.find((element) => element._id === result[0]._id);
+      //const newCard = createCard(card.name, card.link, card.likes, deleteCard, handleImageClick, likeCardButton, isOwner, card._id, isLiked, result[0]._id);
+      const newCard = createCard(card, deleteCard, handleImageClick, likeCardButton, result[0]._id);
       cardsContainer.append(newCard);
     });
   })
