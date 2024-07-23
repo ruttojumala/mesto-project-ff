@@ -1,6 +1,6 @@
 import './pages/index.css';
 //import { initialCards } from './cards.js';
-import { createCard, deleteCard, likeCardButton } from './components/card.js';
+import { createCard } from './components/card.js';
 import { openPopup, closePopup } from './components/modal.js';
 import { enableValidation, clearValidation } from './validation.js';
 import { getInitialCardsRequest, getInitalUsersRequest, sendChangedUsersRequest, addNewCardsRequest, editAvatarRequest } from './api.js';
@@ -40,17 +40,11 @@ const validationConfig = {
   submitButtonSelector: '.popup__button',
   inactiveButtonClass: 'popup__button_disabled',
   inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__error_visible'
+  errorClass: 'popup__input-error_visible'
 }
 
 // валидация
 enableValidation(validationConfig);
-
-/* Выводим карточки на страницу
-initialCards.forEach(function(item) {
-  const newCard = createCard(item.name, item.link, deleteCard, handleImageClick, likeCardButton);
-  cardsContainer.append(newCard);
-});*/
 
 // Обработчики события открытия попапов 
 profileEditButton.addEventListener('click', () => {
@@ -116,8 +110,8 @@ function handleFormNewCardSubmit(evt) {
   evt.preventDefault();
   newCardSaveButton.textContent = 'Сохранение...'
   addNewCardsRequest(newCardNameInput.value, newCardUrlInput.value)
-  .then((res) => {
-      const newCard = createCard(res, deleteCard, handleImageClick, likeCardButton, res.owner._id);
+    .then((res) => {
+      const newCard = createCard(res, handleImageClick, res.owner._id);
       cardsContainer.prepend(newCard);
       closePopup(newCardPopup);
       newCardPopup.reset;
@@ -135,7 +129,7 @@ function handleFormEditAvatarSubmit(evt) {
   evt.preventDefault();
   avatarSaveButton.textContent = 'Сохранение...'
   editAvatarRequest(avatarPopupInput.value)
-  .then((res) => {
+    .then((res) => {
       profileImage.src = res.avatar;
       closePopup(avatarPopup);
       avatarPopupInput.value = '';
@@ -172,7 +166,7 @@ Promise.all([getInitalUsersRequest(), getInitialCardsRequest()])
       //const isOwner = card.owner._id === result[0]._id ? true : false;
       //const isLiked = card.likes.find((element) => element._id === result[0]._id);
       //const newCard = createCard(card.name, card.link, card.likes, deleteCard, handleImageClick, likeCardButton, isOwner, card._id, isLiked, result[0]._id);
-      const newCard = createCard(card, deleteCard, handleImageClick, likeCardButton, result[0]._id);
+      const newCard = createCard(card, handleImageClick, result[0]._id);
       cardsContainer.append(newCard);
     });
   })
