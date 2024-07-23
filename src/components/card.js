@@ -68,7 +68,6 @@ function createCard(card, deleteCard, handleImageClick, likeCardButton, userId){
     const likeMethod = buttonCardLike.classList.contains("card__like-button_is-active") ? removeLikeCardRequest: setLikeCardRequest;
 likeMethod(card._id) 
         .then((res) => {
-          console.log(res)
            numberLike.textContent = res.likes.length; 
            likeCardButton(buttonCardLike); 
         })

@@ -43,11 +43,12 @@ const toggleButtonState = (inputList, buttonElement) => {
 };
 
 const clearValidation = (profileForm, validationConfig) => {
-  const inputList = Array.from(profileForm.querySelectorAll(validationConfig.inputClass));
-  const buttonElement = profileForm.querySelector('.popup__button');
+  const inputList = Array.from(profileForm.querySelectorAll(validationConfig.inputSelector));
+  const buttonElement = profileForm.querySelector(validationConfig.submitButtonSelector);
   inputList.forEach((inputElement) => {
       isValid(profileForm, inputElement);
       toggleButtonState(inputList, buttonElement);
+      hideInputError(profileForm, inputElement);
   });
 };
 

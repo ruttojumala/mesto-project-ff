@@ -61,13 +61,13 @@ profileEditButton.addEventListener('click', () => {
 
 newCardButton.addEventListener('click', () => {
   clearValidation(newCardPopup, validationConfig)
-  newCardPopup.reset;
+  newCardForm.reset();
   openPopup(newCardPopup);
 });
 
 avatarButton.addEventListener('click', () => {
   clearValidation(avatarPopup, validationConfig)
-  avatarPopup.reset;
+  avatarEditForm.reset();
   openPopup(avatarPopup);
 });
 
